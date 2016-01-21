@@ -6,6 +6,7 @@ import (
 	"errors"
 	"io/ioutil"
 	"net/http"
+	"time"
 )
 
 func Post(url string, b []byte) ([]byte,error) {	
@@ -80,8 +81,13 @@ func PostStructInterface(url string ,i interface{}, o interface{}) ([]byte,error
 	}
 }
 
-func Get(url string) ([]byte,error) {
-	resp, err1 := http.Get(url)
+func Get(url string, timeOutInSec int) ([]byte,error) {
+	timeout := time.Duration(timeOutInSec * time.Second)
+	client := http.Client{
+		Timeout: timeout,
+	}
+
+	resp, err1 := client.Get(url)
 	if resp==nil || resp.Body==nil {
 		return nil,err1
 	}
