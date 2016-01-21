@@ -81,8 +81,8 @@ func PostStructInterface(url string ,i interface{}, o interface{}) ([]byte,error
 	}
 }
 
-func Get(url string, timeOutInSec int) ([]byte,error) {
-	timeout := time.Duration(timeOutInSec * time.Second)
+func Get(url string, timeoutInSec int) ([]byte,error) {
+	timeout := time.Duration(time.Duration(timeoutInSec) * time.Second)
 	client := http.Client{
 		Timeout: timeout,
 	}
@@ -105,8 +105,9 @@ func Get(url string, timeOutInSec int) ([]byte,error) {
 	return body,nil
 }
 
-func GetInterface(url string, v interface{}) ([]byte,error) {
-	body,err:=Get(url)
+
+func GetInterface(url string, v interface{}, timeoutInSec int) ([]byte,error) {
+	body,err:=Get(url,timeoutInSec)
 	if err!=nil {
 		return nil,err
 	} else {
