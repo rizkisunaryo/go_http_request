@@ -7,6 +7,8 @@ import (
 	"io/ioutil"
 	"net/http"
 	"time"
+	"net"
+	"crypto/tls"
 )
 
 func Post(url string, b []byte) ([]byte,error) {	
@@ -81,10 +83,18 @@ func PostStructInterface(url string ,i interface{}, o interface{}) ([]byte,error
 	}
 }
 
-func Get(url string, timeoutInSec int) ([]byte,error) {
-	timeout := time.Duration(time.Duration(timeoutInSec) * time.Second)
+func Get(url string, timeoutInSec time.Duration) ([]byte,error) {
+	var timeout = time.Duration(timeoutInSec * time.Second)
+
+	transport := http.Transport{
+		Dial: func (network, addr string) (net.Conn, error) {
+			return net.DialTimeout(network, addr, timeout)
+		},
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
+
 	client := http.Client{
-		Timeout: timeout,
+		Transport: &transport,
 	}
 
 	resp, err1 := client.Get(url)
@@ -106,7 +116,7 @@ func Get(url string, timeoutInSec int) ([]byte,error) {
 }
 
 
-func GetInterface(url string, v interface{}, timeoutInSec int) ([]byte,error) {
+func GetInterface(url string, v interface{}, timeoutInSec time.Duration) ([]byte,error) {
 	body,err:=Get(url,timeoutInSec)
 	if err!=nil {
 		return nil,err
