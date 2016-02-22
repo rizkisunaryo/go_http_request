@@ -11,10 +11,10 @@ import (
 	"crypto/tls"
 )
 
-func Put(url string) ([]byte,error) {
-	req, err := http.NewRequest("PUT", url, nil)
-	if err!=nil {
-		return nil,err
+func Put(url string, b []byte) ([]byte,error) {
+	req, err3 := http.NewRequest("PUT", url, bytes.NewBuffer(b))
+	if err3!=nil {
+		return nil,err3
 	}
 
 	req.Header.Set("Content-Type", "application/json")
@@ -25,9 +25,9 @@ func Put(url string) ([]byte,error) {
 		return nil,err
 	}
 
-	body, err := ioutil.ReadAll(resp.Body)
-	if err!=nil {
-		return nil,err
+	body, err2 := ioutil.ReadAll(resp.Body)
+	if err2!=nil {
+		return nil,err2
 	}
 
 	defer resp.Body.Close()
