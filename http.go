@@ -11,13 +11,35 @@ import (
 	"crypto/tls"
 )
 
+func Put(url string) ([]byte,error) {
+	req, err := http.NewRequest("PUT", url, nil)
+	if err!=nil {
+		return nil,err
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err!=nil {
+		return nil,err
+	}
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err!=nil {
+		return nil,err
+	}
+
+	defer resp.Body.Close()
+	return body,nil
+}
+
 func Delete(url string) ([]byte,error) {
 	req, err := http.NewRequest("DELETE", url, nil)
 	if err!=nil {
 		return nil,err
 	}
 
-	req.Header.Set("X-Custom-Header", "myvalue")
 	req.Header.Set("Content-Type", "application/json")
 
 	client := &http.Client{}
@@ -40,8 +62,7 @@ func Post(url string, b []byte) ([]byte,error) {
 	if err3!=nil {
 		return nil,err3
 	}
-	
-	req.Header.Set("X-Custom-Header", "myvalue")
+
 	req.Header.Set("Content-Type", "application/json")
 
 	client := &http.Client{}
@@ -69,8 +90,7 @@ func PostStruct(url string, i interface{}) ([]byte,error) {
 	if err2!=nil {
 		return nil,err2
 	}
-	
-	req.Header.Set("X-Custom-Header", "myvalue")
+
 	req.Header.Set("Content-Type", "application/json")
 
 	client := &http.Client{}
