@@ -95,11 +95,11 @@ func PostStruct(url string, i interface{}) ([]byte,error) {
 
 	client := &http.Client{}
 	resp, err3 := client.Do(req)
-	defer resp.Body.Close()
 	if err3!=nil {
 		return nil,err3
 	}
-	
+
+	defer resp.Body.Close()
 	body, err4 := ioutil.ReadAll(resp.Body)
 	if err4!=nil {
 		return nil,err4
